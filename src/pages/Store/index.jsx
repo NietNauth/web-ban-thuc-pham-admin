@@ -17,6 +17,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined, ShopOutlined } from '@ant-d
 import axiosClient from '../../api/axiosClient';
 import locationService from '../../api/locationService';
 import PageHeader from '../../components/common/PageHeader';
+import SearchInput from '../../components/common/SearchInput';
 
 const { Option } = Select;
 
@@ -27,12 +28,13 @@ const StoreManagement = () => {
   const [editingStore, setEditingStore] = useState(null);
   const [provincesList, setProvincesList] = useState([]);
   const [districtsList, setDistrictsList] = useState([]);
+  const [search, setSearch] = useState('');
   const [form] = Form.useForm();
 
-  const fetchStores = async () => {
+  const fetchStores = async (searchTerm = '') => {
     try {
       setLoading(true);
-      const res = await axiosClient.get('/admin/stores');
+      const res = await axiosClient.get('/admin/stores', { params: { search: searchTerm } });
       setStores(res || []);
     } catch (error) {
       console.error(error);
@@ -52,9 +54,13 @@ const StoreManagement = () => {
   };
 
   useEffect(() => {
-    fetchStores();
+    fetchStores(search);
     fetchProvinces();
-  }, []);
+  }, [search]);
+
+  const handleSearch = (value) => {
+    setSearch(value);
+  };
 
   const handleProvinceChange = (name) => {
     form.setFieldsValue({ district: undefined });
@@ -182,6 +188,13 @@ const StoreManagement = () => {
       />
 
       <Card className="shadow-sm rounded-lg">
+        <div className="mb-4">
+          <SearchInput 
+            placeholder="Tìm theo tên hoặc địa chỉ..." 
+            onSearch={handleSearch} 
+            className="w-full sm:w-80"
+          />
+        </div>
         <Table
           columns={columns}
           dataSource={stores}

@@ -287,9 +287,19 @@ const ProductForm = () => {
                       <Form.Item
                         name="unit"
                         label="Đơn vị tính"
-                        rules={[{ required: true, message: 'Vui lòng nhập đơn vị!' }]}
+                        rules={[{ required: true, message: 'Vui lòng chọn đơn vị!' }]}
                       >
-                        <Input placeholder="Ví dụ: kg, hộp, cái" />
+                        <Select placeholder="Chọn đơn vị" showSearch>
+                          <Option value="kg">Kilogram (kg)</Option>
+                          <Option value="g">Gram (g)</Option>
+                          <Option value="L">Lít (L)</Option>
+                          <Option value="ml">Mililít (ml)</Option>
+                          <Option value="cái">Cái</Option>
+                          <Option value="quả">Quả/Trái</Option>
+                          <Option value="bó">Bó</Option>
+                          <Option value="vỉ">Vỉ/Khay</Option>
+                          <Option value="hộp">Hộp/Gói</Option>
+                        </Select>
                       </Form.Item>
                     </Col>
                     <Col span={8}>

@@ -166,7 +166,8 @@ const OrderDetail = () => {
             loading={updating}
             disabled={order.status === 'completed' || order.status === 'cancelled'}
           >
-            <Option value="pending">Chờ xử lý</Option>
+            <Option value="pending">Chờ xác nhận</Option>
+            <Option value="processing">Đang xử lý</Option>
             <Option value="shipping">Đang giao</Option>
             <Option value="completed">Hoàn thành</Option>
             <Option value="cancelled">Đã hủy</Option>

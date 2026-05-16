@@ -122,9 +122,6 @@ const CustomerDetail = () => {
                </div>
                <h3 className="text-xl font-bold m-0">{customer.name}</h3>
                <p className="text-gray-500 m-0">{customer.email}</p>
-               <Tag color={customer.is_active ? 'green' : 'red'} className="mt-2">
-                 {customer.is_active ? 'Đang hoạt động' : 'Tài khoản khóa'}
-               </Tag>
             </div>
             
             <Descriptions column={1} size="small" bordered>

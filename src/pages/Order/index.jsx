@@ -66,7 +66,8 @@ const Order = () => {
 
   const getStatusTag = (status) => {
     switch(status) {
-      case 'pending': return <Tag color="orange">Chờ xử lý</Tag>;
+      case 'pending': return <Tag color="orange">Chờ xác nhận</Tag>;
+      case 'processing': return <Tag color="processing">Đang chuẩn bị</Tag>;
       case 'shipping': return <Tag color="blue">Đang giao</Tag>;
       case 'completed': return <Tag color="green">Hoàn thành</Tag>;
       case 'cancelled': return <Tag color="red">Đã hủy</Tag>;
@@ -155,7 +156,8 @@ const Order = () => {
       <Card className="shadow-sm rounded-lg">
         <Tabs defaultActiveKey="" onChange={handleTabChange}>
           <TabPane tab="Tất cả" key="" />
-          <TabPane tab="Chờ xử lý" key="pending" />
+          <TabPane tab="Chờ xác nhận" key="pending" />
+          <TabPane tab="Đang xử lý" key="processing" />
           <TabPane tab="Đang giao" key="shipping" />
           <TabPane tab="Hoàn thành" key="completed" />
           <TabPane tab="Đã huỷ" key="cancelled" />
