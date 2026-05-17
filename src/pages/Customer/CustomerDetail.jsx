@@ -51,7 +51,8 @@ const CustomerDetail = () => {
   const getStatusTag = (status) => {
     switch(status) {
       case 'pending': return <Tag color="orange">Chờ xử lý</Tag>;
-      case 'shipping': return <Tag color="blue">Đang giao</Tag>;
+      case 'processing': return <Tag color="blue">Đang xử lý</Tag>;
+      case 'shipping': return <Tag color="cyan">Đang giao</Tag>;
       case 'completed': return <Tag color="green">Hoàn thành</Tag>;
       case 'cancelled': return <Tag color="red">Đã hủy</Tag>;
       default: return <Tag>{status}</Tag>;
@@ -67,7 +68,7 @@ const CustomerDetail = () => {
   }
 
   // Calculate totals
-  const totalSpent = orders.filter(o => o.status === 'completed').reduce((sum, o) => sum + parseInt(o.total_amount || 0), 0);
+  const totalSpent = orders.filter(o => o.status === 'completed').reduce((sum, o) => sum + parseFloat(o.final_price || 0), 0);
   const completedOrdersCount = orders.filter(o => o.status === 'completed').length;
 
   const orderColumns = [
@@ -85,8 +86,8 @@ const CustomerDetail = () => {
     },
     {
       title: 'Tổng tiền',
-      dataIndex: 'total_amount',
-      key: 'total_amount',
+      dataIndex: 'final_price',
+      key: 'final_price',
       render: (val) => <span className="font-medium text-green-600">{formatCurrency(val)}</span>,
     },
     {
@@ -103,6 +104,14 @@ const CustomerDetail = () => {
       )
     }
   ];
+
+  const formatBirthDate = (dateString) => {
+    if (!dateString) return 'Chưa cập nhật';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString;
+    const pad = (n) => (n < 10 ? '0' + n : n);
+    return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
+  };
 
   return (
     <div>
@@ -126,6 +135,8 @@ const CustomerDetail = () => {
             
             <Descriptions column={1} size="small" bordered>
               <Descriptions.Item label="Điện thoại">{customer.phone || 'Chưa cập nhật'}</Descriptions.Item>
+              <Descriptions.Item label="Ngày sinh">{formatBirthDate(customer.dob)}</Descriptions.Item>
+              <Descriptions.Item label="Giới tính">{customer.gender || 'Chưa cập nhật'}</Descriptions.Item>
               <Descriptions.Item label="Địa chỉ">{customer.address || 'Chưa cập nhật'}</Descriptions.Item>
               <Descriptions.Item label="Ngày tham gia">{formatDate(customer.created_at)}</Descriptions.Item>
             </Descriptions>

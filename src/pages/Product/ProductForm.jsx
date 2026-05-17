@@ -12,7 +12,7 @@ import {
   Row,
   Col,
   Space,
-  Spin
+  Spin,
 } from 'antd';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -27,18 +27,21 @@ const { TextArea } = Input;
 // Quill modules for the toolbar
 const quillModules = {
   toolbar: [
-    [{ 'header': [1, 2, 3, false] }],
+    [{ header: [1, 2, 3, false] }],
     ['bold', 'italic', 'underline', 'strike'],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-    ['link', 'clean']
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link', 'clean'],
   ],
 };
 
 const quillFormats = [
   'header',
-  'bold', 'italic', 'underline', 'strike',
-  'list', 'bullet',
-  'link'
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'list',
+  'link',
 ];
 
 const ProductForm = () => {
@@ -62,7 +65,9 @@ const ProductForm = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axiosClient.get('/admin/categories', { params: { per_page: 100 } });
+      const res = await axiosClient.get('/admin/categories', {
+        params: { per_page: 100 },
+      });
       setCategories(res.data?.data || res.data || []);
     } catch (error) {
       console.error(error);
@@ -82,14 +87,16 @@ const ProductForm = () => {
         status: product.status === 'in_stock',
         is_featured: product.is_featured,
         nutritional_info: product.nutritional_info,
-        upload: product.image_url ? [
-          {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: product.image_url,
-          }
-        ] : [],
+        upload: product.image_url
+          ? [
+              {
+                uid: '-1',
+                name: 'image.png',
+                status: 'done',
+                url: product.image_url,
+              },
+            ]
+          : [],
       });
       setImageUrl(product.img || product.image_url);
     } catch (error) {
@@ -109,14 +116,20 @@ const ProductForm = () => {
       formData.append('name', values.name);
       formData.append('category_id', values.category_id);
       formData.append('price', values.price);
-      if (values.original_price) formData.append('old_price', values.original_price);
+      if (values.original_price)
+        formData.append('old_price', values.original_price);
       if (values.discount) formData.append('discount', values.discount);
       if (values.tag) formData.append('tag', values.tag);
       formData.append('unit', values.unit || 'cái');
       if (values.weight) formData.append('weight', values.weight);
-      formData.append('quantity', values.stock !== undefined ? values.stock : 0);
-      if (values.description) formData.append('description', values.description);
-      if (values.nutritional_info) formData.append('nutritional_info', values.nutritional_info);
+      formData.append(
+        'quantity',
+        values.stock !== undefined ? values.stock : 0
+      );
+      if (values.description)
+        formData.append('description', values.description);
+      if (values.nutritional_info)
+        formData.append('nutritional_info', values.nutritional_info);
       formData.append('is_featured', values.is_featured ? 1 : 0);
       formData.append('status', values.status ? 'in_stock' : 'out_of_stock');
 
@@ -141,7 +154,9 @@ const ProductForm = () => {
       navigate('/products');
     } catch (error) {
       console.error(error);
-      message.error(error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại!');
+      message.error(
+        error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại!'
+      );
     } finally {
       setSubmitting(false);
     }
@@ -155,19 +170,17 @@ const ProductForm = () => {
 
   return (
     <div>
-      <PageHeader
-        title={isEdit ? 'Sửa Sản Phẩm' : 'Thêm Sản Phẩm Mới'}
-      />
+      <PageHeader title={isEdit ? 'Sửa Sản Phẩm' : 'Thêm Sản Phẩm Mới'} />
 
       {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <Spin size="large" />
+        <div className='flex justify-center items-center h-64'>
+          <Spin size='large' />
         </div>
       ) : (
-        <Card className="shadow-sm rounded-lg max-w-5xl mx-auto">
+        <Card className='shadow-sm rounded-lg max-w-5xl mx-auto'>
           <Form
             form={form}
-            layout="vertical"
+            layout='vertical'
             onFinish={onFinish}
             initialValues={{
               status: true,
@@ -179,94 +192,113 @@ const ProductForm = () => {
             <Row gutter={24}>
               <Col xs={24} md={16}>
                 {/* Thông tin cơ bản */}
-                <Card title="Thông tin cơ bản" className="mb-4 bg-gray-50 bg-opacity-50" bordered={false}>
+                <Card
+                  title='Thông tin cơ bản'
+                  className='mb-4 bg-gray-50 bg-opacity-50'
+                  variant='borderless'
+                >
                   <Form.Item
-                    name="name"
-                    label="Tên sản phẩm"
-                    rules={[{ required: true, message: 'Vui lòng nhập tên sản phẩm!' }]}
+                    name='name'
+                    label='Tên sản phẩm'
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Vui lòng nhập tên sản phẩm!',
+                      },
+                    ]}
                   >
-                    <Input placeholder="Ví dụ: Thịt bò Kobe" />
+                    <Input placeholder='Ví dụ: Thịt bò Kobe' />
                   </Form.Item>
 
                   <Row gutter={16}>
                     <Col span={12}>
                       <Form.Item
-                        name="category_id"
-                        label="Danh mục"
-                        rules={[{ required: true, message: 'Vui lòng chọn danh mục!' }]}
+                        name='category_id'
+                        label='Danh mục'
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Vui lòng chọn danh mục!',
+                          },
+                        ]}
                       >
-                        <Select placeholder="Chọn danh mục">
-                          {categories.map(c => <Option key={c.id} value={c.id}>{c.title}</Option>)}
+                        <Select placeholder='Chọn danh mục'>
+                          {categories.map((c) => (
+                            <Option key={c.id} value={c.id}>
+                              {c.title}
+                            </Option>
+                          ))}
                         </Select>
                       </Form.Item>
                     </Col>
                     <Col span={12}>
-                      <Form.Item
-                        name="tag"
-                        label="Nhãn (Tag)"
-                      >
-                        <Select placeholder="Chọn nhãn" allowClear>
-                          <Option value="new">Mới</Option>
-                          <Option value="hot">Bán chạy</Option>
-                          <Option value="sale">Giảm giá</Option>
+                      <Form.Item name='tag' label='Nhãn (Tag)'>
+                        <Select placeholder='Chọn nhãn' allowClear>
+                          <Option value='new'>Mới</Option>
+                          <Option value='hot'>Bán chạy</Option>
+                          <Option value='sale'>Giảm giá</Option>
                         </Select>
                       </Form.Item>
                     </Col>
                   </Row>
 
-                  <Form.Item
-                    name="description"
-                    label="Mô tả sản phẩm"
-                  >
-                    <ReactQuill 
-                      theme="snow" 
+                  <Form.Item name='description' label='Mô tả sản phẩm'>
+                    <ReactQuill
+                      theme='snow'
                       modules={quillModules}
                       formats={quillFormats}
-                      placeholder="Nhập mô tả sản phẩm..."
-                      className="bg-white rounded"
+                      placeholder='Nhập mô tả sản phẩm...'
+                      className='bg-white rounded'
                     />
                   </Form.Item>
 
                   <Form.Item
-                    name="nutritional_info"
-                    label="Thông tin dinh dưỡng"
+                    name='nutritional_info'
+                    label='Thông tin dinh dưỡng'
                   >
-                    <ReactQuill 
-                      theme="snow" 
+                    <ReactQuill
+                      theme='snow'
                       modules={quillModules}
                       formats={quillFormats}
-                      placeholder="Nhập thông tin dinh dưỡng..."
-                      className="bg-white rounded"
+                      placeholder='Nhập thông tin dinh dưỡng...'
+                      className='bg-white rounded'
                     />
                   </Form.Item>
                 </Card>
 
                 {/* Giá và Tồn kho */}
-                <Card title="Giá & Kho" className="bg-gray-50 bg-opacity-50" bordered={false}>
+                <Card
+                  title='Giá & Kho'
+                  className='bg-gray-50 bg-opacity-50'
+                  variant='borderless'
+                >
                   <Row gutter={16}>
                     <Col span={12}>
                       <Form.Item
-                        name="price"
-                        label="Giá bán (VNĐ)"
-                        rules={[{ required: true, message: 'Vui lòng nhập giá bán!' }]}
+                        name='price'
+                        label='Giá bán (VNĐ)'
+                        rules={[
+                          { required: true, message: 'Vui lòng nhập giá bán!' },
+                        ]}
                       >
                         <InputNumber
-                          className="w-full"
-                          formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                          parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                          className='w-full'
+                          formatter={(value) =>
+                            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                          }
+                          parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
                           min={0}
                         />
                       </Form.Item>
                     </Col>
                     <Col span={12}>
-                      <Form.Item
-                        name="original_price"
-                        label="Giá gốc (VNĐ)"
-                      >
+                      <Form.Item name='original_price' label='Giá gốc (VNĐ)'>
                         <InputNumber
-                          className="w-full"
-                          formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                          parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                          className='w-full'
+                          formatter={(value) =>
+                            `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                          }
+                          parser={(value) => value.replace(/\$\s?|(,*)/g, '')}
                           min={0}
                         />
                       </Form.Item>
@@ -276,38 +308,38 @@ const ProductForm = () => {
                   <Row gutter={16}>
                     <Col span={8}>
                       <Form.Item
-                        name="stock"
-                        label="Số lượng tồn kho"
-                        rules={[{ required: true, message: 'Vui lòng nhập tồn kho!' }]}
+                        name='stock'
+                        label='Số lượng tồn kho'
+                        rules={[
+                          { required: true, message: 'Vui lòng nhập tồn kho!' },
+                        ]}
                       >
-                        <InputNumber className="w-full" min={0} />
+                        <InputNumber className='w-full' min={0} />
                       </Form.Item>
                     </Col>
                     <Col span={8}>
                       <Form.Item
-                        name="unit"
-                        label="Đơn vị tính"
-                        rules={[{ required: true, message: 'Vui lòng chọn đơn vị!' }]}
+                        name='unit'
+                        label='Đơn vị tính'
+                        rules={[
+                          { required: true, message: 'Vui lòng chọn đơn vị!' },
+                        ]}
                       >
-                        <Select placeholder="Chọn đơn vị" showSearch>
-                          <Option value="kg">Kilogram (kg)</Option>
-                          <Option value="g">Gram (g)</Option>
-                          <Option value="L">Lít (L)</Option>
-                          <Option value="ml">Mililít (ml)</Option>
-                          <Option value="cái">Cái</Option>
-                          <Option value="quả">Quả/Trái</Option>
-                          <Option value="bó">Bó</Option>
-                          <Option value="vỉ">Vỉ/Khay</Option>
-                          <Option value="hộp">Hộp/Gói</Option>
+                        <Select placeholder='Chọn đơn vị'>
+                          <Option value='kg'>Kilogram (kg)</Option>
+                          <Option value='g'>Gram (g)</Option>
+                          <Option value='ml'>Mililít (ml)</Option>
+                          <Option value='cái'>Cái</Option>
+                          <Option value='quả'>Quả/Trái</Option>
+                          <Option value='bó'>Bó</Option>
+                          <Option value='vỉ'>Vỉ/Khay</Option>
+                          <Option value='hộp'>Hộp/Gói</Option>
                         </Select>
                       </Form.Item>
                     </Col>
                     <Col span={8}>
-                      <Form.Item
-                        name="weight"
-                        label="Khối lượng (gram)"
-                      >
-                        <InputNumber className="w-full" min={0} />
+                      <Form.Item name='weight' label='Khối lượng (gram)'>
+                        <InputNumber className='w-full' min={0} />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -316,25 +348,40 @@ const ProductForm = () => {
 
               <Col xs={24} md={8}>
                 {/* Ảnh và Trạng thái */}
-                <Card title="Cấu hình khác" className="bg-gray-50 bg-opacity-50" bordered={false}>
-                  <Form.Item label="Trạng thái" name="status" valuePropName="checked">
-                    <Switch checkedChildren="Còn hàng" unCheckedChildren="Hết hàng" />
-                  </Form.Item>
-
-                  <Form.Item label="Nổi bật" name="is_featured" valuePropName="checked">
-                    <Switch checkedChildren="Bật" unCheckedChildren="Tắt" />
+                <Card
+                  title='Cấu hình khác'
+                  className='bg-gray-50 bg-opacity-50'
+                  variant='borderless'
+                >
+                  <Form.Item
+                    label='Trạng thái'
+                    name='status'
+                    valuePropName='checked'
+                  >
+                    <Switch
+                      checkedChildren='Còn hàng'
+                      unCheckedChildren='Hết hàng'
+                    />
                   </Form.Item>
 
                   <Form.Item
-                    name="upload"
-                    label="Ảnh sản phẩm"
-                    valuePropName="fileList"
+                    label='Nổi bật'
+                    name='is_featured'
+                    valuePropName='checked'
+                  >
+                    <Switch checkedChildren='Bật' unCheckedChildren='Tắt' />
+                  </Form.Item>
+
+                  <Form.Item
+                    name='upload'
+                    label='Ảnh sản phẩm'
+                    valuePropName='fileList'
                     getValueFromEvent={normFile}
                   >
                     <Upload
-                      name="image"
-                      listType="picture-card"
-                      className="avatar-uploader"
+                      name='image'
+                      listType='picture-card'
+                      className='avatar-uploader'
                       maxCount={1}
                       beforeUpload={() => false} // Không upload tự động
                     >
@@ -345,18 +392,32 @@ const ProductForm = () => {
                     </Upload>
                   </Form.Item>
                   {imageUrl && !isEdit && (
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-500 mb-1">Ảnh hiện tại:</p>
-                      <img src={imageUrl} alt="current" className="w-full max-w-[150px] object-cover rounded border" />
+                    <div className='mt-2'>
+                      <p className='text-sm text-gray-500 mb-1'>
+                        Ảnh hiện tại:
+                      </p>
+                      <img
+                        src={imageUrl}
+                        alt='current'
+                        className='w-full max-w-[150px] object-cover rounded border'
+                      />
                     </div>
                   )}
                 </Card>
               </Col>
             </Row>
 
-            <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-gray-200">
-              <Button onClick={() => navigate('/products')} size="large">Hủy bỏ</Button>
-              <Button type="primary" htmlType="submit" size="large" loading={submitting} className="bg-primary">
+            <div className='flex justify-end gap-3 mt-8 pt-4 border-t border-gray-200'>
+              <Button onClick={() => navigate('/products')} size='large'>
+                Hủy bỏ
+              </Button>
+              <Button
+                type='primary'
+                htmlType='submit'
+                size='large'
+                loading={submitting}
+                className='bg-primary'
+              >
                 {isEdit ? 'Lưu cập nhật' : 'Tạo sản phẩm'}
               </Button>
             </div>

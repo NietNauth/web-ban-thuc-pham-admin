@@ -11,9 +11,14 @@ import {
   Tag,
   message,
   Popconfirm,
-  Switch
+  Switch,
 } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, ShopOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  ShopOutlined,
+} from '@ant-design/icons';
 import axiosClient from '../../api/axiosClient';
 import locationService from '../../api/locationService';
 import PageHeader from '../../components/common/PageHeader';
@@ -34,7 +39,9 @@ const StoreManagement = () => {
   const fetchStores = async (searchTerm = '') => {
     try {
       setLoading(true);
-      const res = await axiosClient.get('/admin/stores', { params: { search: searchTerm } });
+      const res = await axiosClient.get('/admin/stores', {
+        params: { search: searchTerm },
+      });
       setStores(res || []);
     } catch (error) {
       console.error(error);
@@ -42,6 +49,11 @@ const StoreManagement = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (value) => {
+    setSearch(value);
+    fetchStores(value);
   };
 
   const fetchProvinces = async () => {
@@ -64,8 +76,8 @@ const StoreManagement = () => {
 
   const handleProvinceChange = (name) => {
     form.setFieldsValue({ district: undefined });
-    const selected = provincesList.find(p => p.name === name);
-    setDistrictsList(selected ? (selected.districts || []) : []);
+    const selected = provincesList.find((p) => p.name === name);
+    setDistrictsList(selected ? selected.districts || [] : []);
   };
 
   const handleAdd = () => {
@@ -78,8 +90,8 @@ const StoreManagement = () => {
     setEditingStore(record);
     form.setFieldsValue(record);
     // Find districts for the existing city
-    const selected = provincesList.find(p => p.name === record.city);
-    setDistrictsList(selected ? (selected.districts || []) : []);
+    const selected = provincesList.find((p) => p.name === record.city);
+    setDistrictsList(selected ? selected.districts || [] : []);
     setIsModalVisible(true);
   };
 
@@ -87,7 +99,7 @@ const StoreManagement = () => {
     try {
       await axiosClient.delete(`/admin/stores/${id}`);
       message.success('Xóa cửa hàng thành công!');
-      fetchStores();
+      fetchStores(search);
     } catch (error) {
       console.error(error);
       message.error('Không thể xóa cửa hàng!');
@@ -105,7 +117,7 @@ const StoreManagement = () => {
         message.success('Thêm cửa hàng mới thành công!');
       }
       setIsModalVisible(false);
-      fetchStores();
+      fetchStores(search);
     } catch (error) {
       console.error(error);
       // antd handles form validation errors
@@ -117,7 +129,9 @@ const StoreManagement = () => {
       title: 'Tên cửa hàng',
       dataIndex: 'name',
       key: 'name',
-      render: (text) => <span className="font-bold text-green-700">{text}</span>,
+      render: (text) => (
+        <span className='font-bold text-green-700'>{text}</span>
+      ),
     },
     {
       title: 'Địa chỉ',
@@ -149,19 +163,19 @@ const StoreManagement = () => {
       title: 'Hành động',
       key: 'action',
       render: (_, record) => (
-        <Space size="middle">
-          <Button 
-            type="primary" 
-            ghost 
-            icon={<EditOutlined />} 
-            onClick={() => handleEdit(record)} 
+        <Space size='middle'>
+          <Button
+            type='primary'
+            ghost
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
           />
           <Popconfirm
-            title="Xác nhận xóa?"
-            description="Bạn có chắc muốn xóa cửa hàng này không?"
+            title='Xác nhận xóa?'
+            description='Bạn có chắc muốn xóa cửa hàng này không?'
             onConfirm={() => handleDelete(record.id)}
-            okText="Xóa"
-            cancelText="Hủy"
+            okText='Xóa'
+            cancelText='Hủy'
             okButtonProps={{ danger: true }}
           >
             <Button danger icon={<DeleteOutlined />} />
@@ -173,32 +187,32 @@ const StoreManagement = () => {
 
   return (
     <div>
-      <PageHeader 
-        title="Quản lý hệ thống cửa hàng" 
+      <PageHeader
+        title='Quản lý hệ thống cửa hàng'
         extra={
-          <Button 
-            type="primary" 
-            icon={<PlusOutlined />} 
+          <Button
+            type='primary'
+            icon={<PlusOutlined />}
             onClick={handleAdd}
-            className="bg-green-600 hover:bg-green-700"
+            className='bg-green-600 hover:bg-green-700'
           >
             Thêm cửa hàng
           </Button>
         }
       />
 
-      <Card className="shadow-sm rounded-lg">
-        <div className="mb-4">
-          <SearchInput 
-            placeholder="Tìm theo tên hoặc địa chỉ..." 
-            onSearch={handleSearch} 
-            className="w-full sm:w-80"
+      <Card className='shadow-sm rounded-lg'>
+        <div className='mb-4'>
+          <SearchInput
+            placeholder='Tìm theo Tên hoặc Địa chỉ cửa hàng...'
+            onSearch={handleSearch}
+            className='w-full sm:w-96'
           />
         </div>
         <Table
           columns={columns}
           dataSource={stores}
-          rowKey="id"
+          rowKey='id'
           loading={loading}
           pagination={{ pageSize: 10 }}
         />
@@ -211,76 +225,89 @@ const StoreManagement = () => {
         onCancel={() => setIsModalVisible(false)}
         width={600}
         okText={editingStore ? 'Cập nhật' : 'Thêm mới'}
-        cancelText="Hủy"
+        cancelText='Hủy'
       >
         <Form
           form={form}
-          layout="vertical"
+          layout='vertical'
           initialValues={{ is_active: true }}
-          className="mt-4"
+          className='mt-4'
         >
           <Form.Item
-            name="name"
-            label="Tên cửa hàng"
+            name='name'
+            label='Tên cửa hàng'
             rules={[{ required: true, message: 'Vui lòng nhập tên cửa hàng!' }]}
           >
-            <Input prefix={<ShopOutlined className="text-gray-400" />} placeholder="Ví dụ: Tôm Fruits Cầu Giấy" />
+            <Input
+              prefix={<ShopOutlined className='text-gray-400' />}
+              placeholder='Ví dụ: Tôm Fruits Cầu Giấy'
+            />
           </Form.Item>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className='grid grid-cols-2 gap-4'>
             <Form.Item
-              name="city"
-              label="Tỉnh/Thành phố"
+              name='city'
+              label='Tỉnh/Thành phố'
               rules={[{ required: true, message: 'Chọn tỉnh thành!' }]}
             >
-              <Select placeholder="Chọn tỉnh thành" onChange={handleProvinceChange} showSearch optionFilterProp="children">
-                {provincesList.map(c => <Option key={c.code} value={c.name}>{c.name}</Option>)}
+              <Select
+                placeholder='Chọn tỉnh thành'
+                onChange={handleProvinceChange}
+                showSearch
+                optionFilterProp='children'
+              >
+                {provincesList.map((c) => (
+                  <Option key={c.code} value={c.name}>
+                    {c.name}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
 
             <Form.Item
-              name="district"
-              label="Quận/Huyện"
+              name='district'
+              label='Quận/Huyện'
               rules={[{ required: true, message: 'Chọn quận huyện!' }]}
             >
-              <Select placeholder="Chọn quận huyện" disabled={!districtsList.length} showSearch optionFilterProp="children">
-                {districtsList.map(d => (
-                  <Option key={d.code} value={d.name}>{d.name}</Option>
+              <Select
+                placeholder='Chọn quận huyện'
+                disabled={!districtsList.length}
+                showSearch
+                optionFilterProp='children'
+              >
+                {districtsList.map((d) => (
+                  <Option key={d.code} value={d.name}>
+                    {d.name}
+                  </Option>
                 ))}
               </Select>
             </Form.Item>
           </div>
 
           <Form.Item
-            name="address"
-            label="Địa chỉ chi tiết"
+            name='address'
+            label='Địa chỉ chi tiết'
             rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}
           >
-            <Input placeholder="Ví dụ: Số 123 đường ABC" />
+            <Input placeholder='Ví dụ: Số 123 đường ABC' />
           </Form.Item>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Form.Item
-              name="phone"
-              label="Số điện thoại"
-            >
-              <Input placeholder="Ví dụ: 0123456789" />
+          <div className='grid grid-cols-2 gap-4'>
+            <Form.Item name='phone' label='Số điện thoại'>
+              <Input placeholder='Ví dụ: 0123456789' />
             </Form.Item>
 
-            <Form.Item
-              name="opening_hours"
-              label="Giờ mở cửa"
-            >
-              <Input placeholder="Ví dụ: 6h30 - 21h00" />
+            <Form.Item name='opening_hours' label='Giờ mở cửa'>
+              <Input placeholder='Ví dụ: 6h30 - 21h00' />
             </Form.Item>
           </div>
 
           <Form.Item
-            name="is_active"
-            label="Trạng thái hoạt động"
-            valuePropName="checked"
+            name='is_active'
+            label='Trạng thái hoạt động'
+            valuePropName='checked'
           >
-            <Switch checkedChildren="Hoạt động" unCheckedChildren="Tạm nghỉ" />
+            <Switch checkedChildren='Hoạt động' unCheckedChildren='Tạm nghỉ' />
           </Form.Item>
         </Form>
       </Modal>

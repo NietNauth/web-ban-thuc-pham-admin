@@ -73,18 +73,6 @@ const Customer = () => {
     }
   };
 
-  const handleToggleStatus = async (id, checked) => {
-     try {
-       // Assuming API supports quick toggle. If not, fallback to put
-       await axiosClient.put(`/admin/users/${id}/status`, { is_active: checked ? 1 : 0 });
-       message.success('Cập nhật trạng thái thành công!');
-       setCustomers(customers.map(c => c.id === id ? { ...c, is_active: checked } : c));
-     } catch (error) {
-       message.error('Không thể cập nhật trạng thái');
-       fetchCustomers();
-     }
-  }
-
   const columns = [
     {
       title: 'Ảnh',

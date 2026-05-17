@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Table, 
-  Button, 
-  Space, 
-  Card,
-  Tabs,
-  Tag
-} from 'antd';
+import { Table, Button, Space, Card, Tabs, Tag } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '../../components/common/PageHeader';
@@ -22,7 +15,7 @@ const Order = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
-  
+
   const [queryParams, setQueryParams] = useState({
     page: 1,
     per_page: 15,
@@ -38,7 +31,9 @@ const Order = () => {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const res = await axiosClient.get('/admin/orders', { params: queryParams });
+      const res = await axiosClient.get('/admin/orders', {
+        params: queryParams,
+      });
       setOrders(res.data?.data || res.data || []);
       setTotal(res.data?.total || res.total || 0);
     } catch (error) {
@@ -57,21 +52,27 @@ const Order = () => {
   };
 
   const handleTableChange = (pagination) => {
-    setQueryParams({ 
-      ...queryParams, 
+    setQueryParams({
+      ...queryParams,
       page: pagination.current,
-      per_page: pagination.pageSize 
+      per_page: pagination.pageSize,
     });
   };
 
   const getStatusTag = (status) => {
-    switch(status) {
-      case 'pending': return <Tag color="orange">Chờ xác nhận</Tag>;
-      case 'processing': return <Tag color="processing">Đang chuẩn bị</Tag>;
-      case 'shipping': return <Tag color="blue">Đang giao</Tag>;
-      case 'completed': return <Tag color="green">Hoàn thành</Tag>;
-      case 'cancelled': return <Tag color="red">Đã hủy</Tag>;
-      default: return <Tag>{status}</Tag>;
+    switch (status) {
+      case 'pending':
+        return <Tag color='orange'>Chờ xử lý</Tag>;
+      case 'processing':
+        return <Tag color='blue'>Đang xử lý</Tag>;
+      case 'shipping':
+        return <Tag color='cyan'>Đang giao</Tag>;
+      case 'completed':
+        return <Tag color='green'>Hoàn thành</Tag>;
+      case 'cancelled':
+        return <Tag color='red'>Đã hủy</Tag>;
+      default:
+        return <Tag>{status}</Tag>;
     }
   };
 
@@ -80,7 +81,11 @@ const Order = () => {
       title: 'Mã đơn',
       dataIndex: 'order_code',
       key: 'order_code',
-      render: (text, record) => <span className="font-semibold text-gray-700">#{text || record.id}</span>,
+      render: (text, record) => (
+        <span className='font-semibold text-gray-700'>
+          #{text || record.id}
+        </span>
+      ),
     },
     {
       title: 'Khách hàng',
@@ -92,17 +97,24 @@ const Order = () => {
       title: 'Tổng tiền',
       dataIndex: 'final_price',
       key: 'final_price',
-      render: (val) => <span className="font-medium text-green-600">{formatCurrency(val)}</span>,
+      render: (val) => (
+        <span className='font-medium text-green-600'>
+          {formatCurrency(val)}
+        </span>
+      ),
     },
     {
       title: 'Phương thức TT',
       dataIndex: 'payment_method',
       key: 'payment_method',
-      render: (method) => 
-        method === 'cod' ? 'Thanh toán khi nhận hàng' 
-        : method === 'bank' ? 'Chuyển khoản'
-        : method === 'vnpay' ? 'VNPay'
-        : method,
+      render: (method) =>
+        method === 'cod'
+          ? 'Thanh toán khi nhận hàng'
+          : method === 'bank'
+            ? 'Chuyển khoản'
+            : method === 'vnpay'
+              ? 'VNPay'
+              : method,
     },
     {
       title: 'TT Thanh toán',
@@ -110,9 +122,11 @@ const Order = () => {
       key: 'payment_status',
       align: 'center',
       render: (status) => {
-        if (status === 'paid') return <Tag color="success">Đã thanh toán</Tag>;
-        if (status === 'unpaid') return <Tag color="default">Chưa thanh toán</Tag>;
-        if (status === 'refunded') return <Tag color="purple">Đã hoàn tiền</Tag>;
+        if (status === 'paid') return <Tag color='success'>Đã thanh toán</Tag>;
+        if (status === 'unpaid')
+          return <Tag color='default'>Chưa thanh toán</Tag>;
+        if (status === 'refunded')
+          return <Tag color='purple'>Đã hoàn tiền</Tag>;
         return <Tag>{status}</Tag>;
       },
     },
@@ -134,13 +148,13 @@ const Order = () => {
       key: 'action',
       align: 'center',
       render: (_, record) => (
-        <Space size="small">
-          <Button 
-            type="primary" 
+        <Space size='small'>
+          <Button
+            type='primary'
             ghost
-            icon={<EyeOutlined />} 
-            onClick={() => navigate(`/orders/${record.id}`)} 
-            size="small"
+            icon={<EyeOutlined />}
+            onClick={() => navigate(`/orders/${record.id}`)}
+            size='small'
           >
             Xem
           </Button>
@@ -151,30 +165,30 @@ const Order = () => {
 
   return (
     <div>
-      <PageHeader title="Quản lý Đơn hàng" />
+      <PageHeader title='Quản lý Đơn hàng' />
 
-      <Card className="shadow-sm rounded-lg">
-        <Tabs defaultActiveKey="" onChange={handleTabChange}>
-          <TabPane tab="Tất cả" key="" />
-          <TabPane tab="Chờ xác nhận" key="pending" />
-          <TabPane tab="Đang xử lý" key="processing" />
-          <TabPane tab="Đang giao" key="shipping" />
-          <TabPane tab="Hoàn thành" key="completed" />
-          <TabPane tab="Đã huỷ" key="cancelled" />
+      <Card className='shadow-sm rounded-lg'>
+        <Tabs defaultActiveKey='' onChange={handleTabChange}>
+          <TabPane tab='Tất cả' key='' />
+          <TabPane tab='Chờ xử lý' key='pending' />
+          <TabPane tab='Đang xử lý' key='processing' />
+          <TabPane tab='Đang giao' key='shipping' />
+          <TabPane tab='Hoàn thành' key='completed' />
+          <TabPane tab='Đã huỷ' key='cancelled' />
         </Tabs>
 
-        <div className="mb-4">
-          <SearchInput 
-            placeholder="Tìm theo mã đơn hoặc tên khách hàng..." 
-            onSearch={handleSearch} 
-            className="w-full sm:w-80"
+        <div className='mb-4'>
+          <SearchInput
+            placeholder='Tìm theo mã đơn hoặc tên khách hàng...'
+            onSearch={handleSearch}
+            className='w-full sm:w-80'
           />
         </div>
 
         <Table
           columns={columns}
           dataSource={orders}
-          rowKey="id"
+          rowKey='id'
           loading={loading}
           pagination={{
             current: queryParams.page,
@@ -186,7 +200,7 @@ const Order = () => {
           onChange={handleTableChange}
           scroll={{ x: 800 }}
           bordered={false}
-          size="middle"
+          size='middle'
           locale={{ emptyText: 'Không có dữ liệu' }}
         />
       </Card>
