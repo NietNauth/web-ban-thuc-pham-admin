@@ -35,11 +35,6 @@ const Customer = () => {
     search: '',
   });
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [editingCustomer, setEditingCustomer] = useState(null);
-  const [form] = Form.useForm();
-
   useEffect(() => {
     fetchCustomers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -71,47 +66,6 @@ const Customer = () => {
     });
   };
 
-  const showModal = (customer = null) => {
-    setEditingCustomer(customer);
-    if (customer) {
-      form.setFieldsValue({
-        name: customer.name,
-        email: customer.email,
-        phone: customer.phone,
-        address: customer.address,
-      });
-    } else {
-      form.resetFields();
-    }
-    setIsModalVisible(true);
-  };
-
-  const handleCancelModal = () => {
-    setIsModalVisible(false);
-    form.resetFields();
-    setEditingCustomer(null);
-  };
-
-  const handleSubmit = async (values) => {
-    try {
-      setSubmitting(true);
-      if (editingCustomer) {
-        await axiosClient.put(`/admin/users/${editingCustomer.id}`, values);
-        message.success('Cập nhật khách hàng thành công!');
-      } else {
-        await axiosClient.post('/admin/users', values);
-        message.success('Thêm khách hàng thành công!');
-      }
-      handleCancelModal();
-      fetchCustomers();
-    } catch (error) {
-      console.error(error);
-      message.error(error.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại!');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   const handleDelete = async (id) => {
     try {
       // Backend handles setting is_active = 0
@@ -123,18 +77,6 @@ const Customer = () => {
       message.error(error.response?.data?.message || 'Không thể thao tác!');
     }
   };
-
-  const handleToggleStatus = async (id, checked) => {
-     try {
-       // Assuming API supports quick toggle. If not, fallback to put
-       await axiosClient.put(`/admin/users/${id}/status`, { is_active: checked ? 1 : 0 });
-       message.success('Cập nhật trạng thái thành công!');
-       setCustomers(customers.map(c => c.id === id ? { ...c, is_active: checked } : c));
-     } catch (error) {
-       message.error('Không thể cập nhật trạng thái');
-       fetchCustomers();
-     }
-  }
 
   const columns = [
     {
@@ -173,19 +115,6 @@ const Customer = () => {
       render: (val) => formatDate(val),
     },
     {
-      title: 'Trạng thái',
-      key: 'is_active',
-      align: 'center',
-      render: (_, record) => (
-        <Switch 
-          checked={!!record.is_active} 
-          onChange={(checked) => handleToggleStatus(record.id, checked)}
-          checkedChildren="Hoạt động"
-          unCheckedChildren="Bị khóa"
-        />
-      ),
-    },
-    {
       title: 'Hành động',
       key: 'action',
       align: 'center',
@@ -194,13 +123,6 @@ const Customer = () => {
           <Button 
             icon={<EyeOutlined />} 
             onClick={() => navigate(`/customers/${record.id}`)} 
-            size="small"
-          />
-          <Button 
-            type="primary" 
-            ghost
-            icon={<EditOutlined />} 
-            onClick={() => showModal(record)} 
             size="small"
           />
           <Popconfirm
@@ -250,70 +172,6 @@ const Customer = () => {
           size="middle"
         />
       </Card>
-
-      <Modal
-        title={editingCustomer ? 'Sửa Khách hàng' : 'Thêm Khách hàng'}
-        open={isModalVisible}
-        onCancel={handleCancelModal}
-        footer={null}
-        destroyOnClose
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-          className="mt-4"
-        >
-          <Form.Item
-            name="name"
-            label="Tên khách hàng"
-            rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[{ required: true, message: 'Vui lòng nhập email!' }, { type: 'email', message: 'Email không hợp lệ!' }]}
-          >
-            <Input />
-          </Form.Item>
-          
-          {!editingCustomer && (
-             <Form.Item
-             name="password"
-             label="Mật khẩu"
-             rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
-           >
-             <Input.Password />
-           </Form.Item>
-          )}
-
-          <Form.Item
-            name="phone"
-            label="Số điện thoại"
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            name="address"
-            label="Địa chỉ"
-          >
-            <Input.TextArea rows={3} />
-          </Form.Item>
-
-          <Form.Item className="mb-0 text-right">
-            <Space>
-              <Button onClick={handleCancelModal}>Hủy</Button>
-              <Button type="primary" htmlType="submit" className="bg-primary" loading={submitting}>
-                {editingCustomer ? 'Cập nhật' : 'Thêm mới'}
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Modal>
     </div>
   );
 };

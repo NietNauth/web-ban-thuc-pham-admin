@@ -126,20 +126,6 @@ const Employee = () => {
       render: (role) => getRoleTag(role),
     },
     {
-      title: 'Trạng thái',
-      key: 'is_active',
-      align: 'center',
-      render: (_, record) => (
-        <Switch 
-          checked={!!record.is_active} 
-          onChange={(checked) => handleToggleStatus(record.id, checked)}
-          checkedChildren="Hoạt động"
-          unCheckedChildren="Bị khóa"
-          disabled={record.role === 'admin'} // Ngăn admin tự khoá mình (tuỳ logic)
-        />
-      ),
-    },
-    {
       title: 'Hành động',
       key: 'action',
       align: 'center',

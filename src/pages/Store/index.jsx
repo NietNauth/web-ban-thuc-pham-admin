@@ -17,6 +17,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined, ShopOutlined } from '@ant-d
 import axiosClient from '../../api/axiosClient';
 import locationService from '../../api/locationService';
 import PageHeader from '../../components/common/PageHeader';
+import SearchInput from '../../components/common/SearchInput';
 
 const { Option } = Select;
 
@@ -27,12 +28,15 @@ const StoreManagement = () => {
   const [editingStore, setEditingStore] = useState(null);
   const [provincesList, setProvincesList] = useState([]);
   const [districtsList, setDistrictsList] = useState([]);
+  const [search, setSearch] = useState('');
   const [form] = Form.useForm();
 
-  const fetchStores = async () => {
+  const fetchStores = async (searchTerm = '') => {
     try {
       setLoading(true);
-      const res = await axiosClient.get('/admin/stores');
+      const res = await axiosClient.get('/admin/stores', {
+        params: { search: searchTerm }
+      });
       setStores(res || []);
     } catch (error) {
       console.error(error);
@@ -40,6 +44,11 @@ const StoreManagement = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSearch = (value) => {
+    setSearch(value);
+    fetchStores(value);
   };
 
   const fetchProvinces = async () => {
@@ -81,7 +90,7 @@ const StoreManagement = () => {
     try {
       await axiosClient.delete(`/admin/stores/${id}`);
       message.success('Xóa cửa hàng thành công!');
-      fetchStores();
+      fetchStores(search);
     } catch (error) {
       console.error(error);
       message.error('Không thể xóa cửa hàng!');
@@ -99,7 +108,7 @@ const StoreManagement = () => {
         message.success('Thêm cửa hàng mới thành công!');
       }
       setIsModalVisible(false);
-      fetchStores();
+      fetchStores(search);
     } catch (error) {
       console.error(error);
       // antd handles form validation errors
@@ -182,6 +191,13 @@ const StoreManagement = () => {
       />
 
       <Card className="shadow-sm rounded-lg">
+        <div className="mb-4">
+          <SearchInput 
+            placeholder="Tìm theo Tên hoặc Địa chỉ cửa hàng..." 
+            onSearch={handleSearch} 
+            className="w-full sm:w-96"
+          />
+        </div>
         <Table
           columns={columns}
           dataSource={stores}

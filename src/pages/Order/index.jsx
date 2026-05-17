@@ -67,7 +67,8 @@ const Order = () => {
   const getStatusTag = (status) => {
     switch(status) {
       case 'pending': return <Tag color="orange">Chờ xử lý</Tag>;
-      case 'shipping': return <Tag color="blue">Đang giao</Tag>;
+      case 'processing': return <Tag color="blue">Đang xử lý</Tag>;
+      case 'shipping': return <Tag color="cyan">Đang giao</Tag>;
       case 'completed': return <Tag color="green">Hoàn thành</Tag>;
       case 'cancelled': return <Tag color="red">Đã hủy</Tag>;
       default: return <Tag>{status}</Tag>;
@@ -156,6 +157,7 @@ const Order = () => {
         <Tabs defaultActiveKey="" onChange={handleTabChange}>
           <TabPane tab="Tất cả" key="" />
           <TabPane tab="Chờ xử lý" key="pending" />
+          <TabPane tab="Đang xử lý" key="processing" />
           <TabPane tab="Đang giao" key="shipping" />
           <TabPane tab="Hoàn thành" key="completed" />
           <TabPane tab="Đã huỷ" key="cancelled" />

@@ -144,23 +144,17 @@ const EmployeeForm = () => {
               <Input.TextArea rows={3} placeholder="Nhập địa chỉ" />
             </Form.Item>
 
-            <div className="grid grid-cols-2 gap-4">
-               <Form.Item
-                 name="role"
-                 label="Vai trò"
-                 rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
-               >
-                 <Select placeholder="Chọn vai trò">
-                   <Option value="admin">Quản trị viên (Admin)</Option>
-                   <Option value="manager">Quản lý (Manager)</Option>
-                   <Option value="staff">Nhân viên (Staff)</Option>
-                 </Select>
-               </Form.Item>
-
-               <Form.Item label="Trạng thái" name="is_active" valuePropName="checked">
-                 <Switch checkedChildren="Hoạt động" unCheckedChildren="Khóa" />
-               </Form.Item>
-            </div>
+             <Form.Item
+               name="role"
+               label="Vai trò"
+               rules={[{ required: true, message: 'Vui lòng chọn vai trò!' }]}
+             >
+               <Select placeholder="Chọn vai trò">
+                 <Option value="admin">Quản trị viên (Admin)</Option>
+                 <Option value="manager">Quản lý (Manager)</Option>
+                 <Option value="staff">Nhân viên (Staff)</Option>
+               </Select>
+             </Form.Item>
 
             <div className="flex justify-end gap-3 mt-4">
               <Button onClick={() => navigate('/employees')} size="large">Hủy bỏ</Button>

@@ -37,7 +37,7 @@ const quillModules = {
 const quillFormats = [
   'header',
   'bold', 'italic', 'underline', 'strike',
-  'list', 'bullet',
+  'list',
   'link'
 ];
 
@@ -179,7 +179,7 @@ const ProductForm = () => {
             <Row gutter={24}>
               <Col xs={24} md={16}>
                 {/* Thông tin cơ bản */}
-                <Card title="Thông tin cơ bản" className="mb-4 bg-gray-50 bg-opacity-50" bordered={false}>
+                <Card title="Thông tin cơ bản" className="mb-4 bg-gray-50 bg-opacity-50" variant="borderless">
                   <Form.Item
                     name="name"
                     label="Tên sản phẩm"
@@ -242,7 +242,7 @@ const ProductForm = () => {
                 </Card>
 
                 {/* Giá và Tồn kho */}
-                <Card title="Giá & Kho" className="bg-gray-50 bg-opacity-50" bordered={false}>
+                <Card title="Giá & Kho" className="bg-gray-50 bg-opacity-50" variant="borderless">
                   <Row gutter={16}>
                     <Col span={12}>
                       <Form.Item
@@ -287,9 +287,18 @@ const ProductForm = () => {
                       <Form.Item
                         name="unit"
                         label="Đơn vị tính"
-                        rules={[{ required: true, message: 'Vui lòng nhập đơn vị!' }]}
+                        rules={[{ required: true, message: 'Vui lòng chọn đơn vị!' }]}
                       >
-                        <Input placeholder="Ví dụ: kg, hộp, cái" />
+                        <Select placeholder="Chọn đơn vị">
+                          <Option value="kg">Kilogram (kg)</Option>
+                          <Option value="g">Gram (g)</Option>
+                          <Option value="ml">Mililít (ml)</Option>
+                          <Option value="cái">Cái</Option>
+                          <Option value="quả">Quả/Trái</Option>
+                          <Option value="bó">Bó</Option>
+                          <Option value="vỉ">Vỉ/Khay</Option>
+                          <Option value="hộp">Hộp/Gói</Option>
+                        </Select>
                       </Form.Item>
                     </Col>
                     <Col span={8}>
@@ -306,7 +315,7 @@ const ProductForm = () => {
 
               <Col xs={24} md={8}>
                 {/* Ảnh và Trạng thái */}
-                <Card title="Cấu hình khác" className="bg-gray-50 bg-opacity-50" bordered={false}>
+                <Card title="Cấu hình khác" className="bg-gray-50 bg-opacity-50" variant="borderless">
                   <Form.Item label="Trạng thái" name="status" valuePropName="checked">
                     <Switch checkedChildren="Còn hàng" unCheckedChildren="Hết hàng" />
                   </Form.Item>
