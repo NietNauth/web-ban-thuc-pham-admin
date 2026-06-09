@@ -70,9 +70,9 @@ const StoreManagement = () => {
     fetchProvinces();
   }, [search]);
 
-  const handleSearch = (value) => {
-    setSearch(value);
-  };
+  // const handleSearch = (value) => {
+  //   setSearch(value);
+  // };
 
   const handleProvinceChange = (name) => {
     form.setFieldsValue({ district: undefined });

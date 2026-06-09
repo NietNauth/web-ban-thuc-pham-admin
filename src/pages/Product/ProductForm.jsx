@@ -273,7 +273,7 @@ const ProductForm = () => {
                   variant='borderless'
                 >
                   <Row gutter={16}>
-                    <Col span={12}>
+                    <Col span={6}>
                       <Form.Item
                         name='price'
                         label='Giá bán (VNĐ)'
@@ -291,7 +291,7 @@ const ProductForm = () => {
                         />
                       </Form.Item>
                     </Col>
-                    <Col span={12}>
+                    <Col span={7}>
                       <Form.Item name='original_price' label='Giá gốc (VNĐ)'>
                         <InputNumber
                           className='w-full'
@@ -303,10 +303,11 @@ const ProductForm = () => {
                         />
                       </Form.Item>
                     </Col>
+                    <Col span={12} />
                   </Row>
 
                   <Row gutter={16}>
-                    <Col span={8}>
+                    <Col span={6}>
                       <Form.Item
                         name='stock'
                         label='Số lượng tồn kho'
@@ -317,7 +318,7 @@ const ProductForm = () => {
                         <InputNumber className='w-full' min={0} />
                       </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col span={6}>
                       <Form.Item
                         name='unit'
                         label='Đơn vị tính'
@@ -325,20 +326,12 @@ const ProductForm = () => {
                           { required: true, message: 'Vui lòng chọn đơn vị!' },
                         ]}
                       >
-                        <Select placeholder='Chọn đơn vị'>
-                          <Option value='kg'>Kilogram (kg)</Option>
-                          <Option value='g'>Gram (g)</Option>
-                          <Option value='ml'>Mililít (ml)</Option>
-                          <Option value='cái'>Cái</Option>
-                          <Option value='quả'>Quả/Trái</Option>
-                          <Option value='bó'>Bó</Option>
-                          <Option value='vỉ'>Vỉ/Khay</Option>
-                          <Option value='hộp'>Hộp/Gói</Option>
-                        </Select>
+                        <Input placeholder='Ví dụ: kg, hộp, chai, gói, quả...' />
                       </Form.Item>
                     </Col>
-                    <Col span={8}>
-                      <Form.Item name='weight' label='Khối lượng (gram)'>
+                    <Col span={2}></Col>
+                    <Col span={10}>
+                      <Form.Item name='weight' label='Khối lượng'>
                         <InputNumber className='w-full' min={0} />
                       </Form.Item>
                     </Col>
